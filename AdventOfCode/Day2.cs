@@ -2,23 +2,24 @@ namespace AdventOfCode
 {
     public class Day2
     {
-        private string[] input;
+        private readonly string[]? _input;
 
         public Day2()
         {
-            string line = Console.ReadLine();
-            input = line.Split(',');
+            var line = Console.ReadLine();
+            _input = line?.Split(',');
         }
 
         public long Part1()
         {
             long answ = 0;
-            for (int i = 0; i < input.Length; i++)
+            if (_input == null) return answ;
+            foreach (var t in _input)
             {
-                for (long j = long.Parse(input[i].Split('-')[0]); j <= long.Parse(input[i].Split('-')[1]); j++)
+                for (var j = long.Parse(t.Split('-')[0]); j <= long.Parse(t.Split('-')[1]); j++)
                 {
-                    string s = j.ToString();
-                    if (s.Substring(0, (s.Length / 2)).Equals(s.Substring(s.Length / 2)))
+                    var s = j.ToString();
+                    if (s[..(s.Length / 2)].Equals(s[(s.Length / 2)..]))
                     {
                         answ += j;
                     }
@@ -34,52 +35,49 @@ namespace AdventOfCode
             var ranges = new List<(long Start, long End)>();
             long globalMax = 0;
 
-            foreach (var line in input)
-            {
-                var parts = line.Split('-');
-                long s = long.Parse(parts[0]);
-                long e = long.Parse(parts[1]);
-                ranges.Add((s, e));
-                if (e > globalMax) globalMax = e;
-            }
-            
-            var foundIds = new HashSet<long>();
-            int maxDigits = globalMax.ToString().Length;
-            
-            for (int L = 2; L <= maxDigits; L++)
-            {
-                for (int l = 1; l <= L / 2; l++)
+            if (_input != null)
+                foreach (var line in _input)
                 {
-                    if (L % l == 0)
+                    var parts = line.Split('-');
+                    var s = long.Parse(parts[0]);
+                    var e = long.Parse(parts[1]);
+                    ranges.Add((s, e));
+                    if (e > globalMax) globalMax = e;
+                }
+
+            var foundIds = new HashSet<long>();
+            var maxDigits = globalMax.ToString().Length;
+            
+            for (var L = 2; L <= maxDigits; L++)
+            {
+                for (var l = 1; l <= L / 2; l++)
+                {
+                    if (L % l != 0) continue;
+                    var k = L / l;
+                    long multiplier = 0;
+                    long blockValue = 1;
+                    var shift = (long)Math.Pow(10, l);
+
+                    for (var i = 0; i < k; i++)
                     {
-                        int k = L / l;
-                        long multiplier = 0;
-                        long blockValue = 1;
-                        long shift = (long)Math.Pow(10, l);
-
-                        for (int i = 0; i < k; i++)
-                        {
-                            multiplier += blockValue;
-                            if (i < k - 1) blockValue *= shift;
-                        }
+                        multiplier += blockValue;
+                        if (i < k - 1) blockValue *= shift;
+                    }
                         
-                        long minSeedLimit = (long)Math.Pow(10, l - 1);
-                        long maxSeedLimit = (long)Math.Pow(10, l) - 1;
+                    var minSeedLimit = (long)Math.Pow(10, l - 1);
+                    var maxSeedLimit = (long)Math.Pow(10, l) - 1;
 
-                        foreach (var range in ranges)
+                    foreach (var range in ranges)
+                    {
+                        var minSeedCalc = (long)Math.Ceiling((double)range.Start / multiplier);
+                        var maxSeedCalc = (long)Math.Floor((double)range.End / multiplier);
+                        var startSeed = Math.Max(minSeedLimit, minSeedCalc);
+                        var endSeed = Math.Min(maxSeedLimit, maxSeedCalc);
+
+                        if (startSeed > endSeed) continue;
+                        for (var seed = startSeed; seed <= endSeed; seed++)
                         {
-                            long minSeedCalc = (long)Math.Ceiling((double)range.Start / multiplier);
-                            long maxSeedCalc = (long)Math.Floor((double)range.End / multiplier);
-                            long startSeed = Math.Max(minSeedLimit, minSeedCalc);
-                            long endSeed = Math.Min(maxSeedLimit, maxSeedCalc);
-
-                            if (startSeed <= endSeed)
-                            {
-                                for (long seed = startSeed; seed <= endSeed; seed++)
-                                {
-                                    foundIds.Add(seed * multiplier);
-                                }
-                            }
+                            foundIds.Add(seed * multiplier);
                         }
                     }
                 }

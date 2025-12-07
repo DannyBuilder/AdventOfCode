@@ -1,73 +1,84 @@
 namespace AdventOfCode
 {
-
     public class Day1
     {
-        List<string> allLines = new List<string>();
-        string line;
+        private readonly List<string> _allLines = [];
 
         public Day1()
         {
+            string? line;
             while (!string.IsNullOrEmpty(line = Console.ReadLine()))
             {
-                allLines.Add(line);
+                _allLines.Add(line);
             }
         }
 
-        public int part1()
+        public int Part1()
         {
-            int curr = 50;
-            int answ = 0;
-            foreach (string s in allLines)
+            var currentPos = 50;
+            var answer = 0;
+
+            foreach (var line in _allLines)
             {
-                if (s[0] == 'R')
+                var direction = line[0];
+                var amount = int.Parse(line.Substring(1));
+
+                if (direction == 'R')
                 {
-                    curr += int.Parse(s.Substring(1));
-                    curr = curr % 100;
+                    currentPos += amount;
                 }
                 else
                 {
-                    curr -= int.Parse(s.Substring(1));
-                    curr = curr % 100;
+                    currentPos -= amount;
                 }
 
-                if (curr == 0)
-                    answ++;
+                currentPos = CleanModulo(currentPos, 100);
+
+                if (currentPos == 0)
+                {
+                    answer++;
+                }
             }
 
-            return answ;
+            return answer;
         }
 
-        public int part2()
+        public int Part2()
         {
-            int curr = 50;
-            int answ = 0;
-            foreach (string s in allLines)
-            {
-                int amount = int.Parse(s.Substring(1));
+            var currentPos = 50;
+            var answer = 0;
 
-                if (s[0] == 'R')
+            foreach (var line in _allLines)
+            {
+                var direction = line[0];
+                var amount = int.Parse(line[1..]);
+
+                if (direction == 'R')
                 {
-                    answ += (curr + amount) / 100;
-                    curr = (curr + amount) % 100;
+                    answer += (currentPos + amount) / 100;
+                    currentPos = (currentPos + amount) % 100;
                 }
                 else
                 {
-                    int distToZero = (curr == 0) ? 100 : curr;
+                    var distToZero = (currentPos == 0) ? 100 : currentPos;
 
                     if (amount >= distToZero)
                     {
-                        answ += 1 + (amount - distToZero) / 100;
+                        answer += 1 + (amount - distToZero) / 100;
                     }
 
-                    curr = (curr - amount) % 100;
-                    if (curr < 0) curr += 100;
+                    currentPos = (currentPos - amount) % 100;
+                    
+                    if (currentPos < 0) currentPos += 100;
                 }
-
             }
 
-            return answ;
+            return answer;
+        }
 
+        private static int CleanModulo(int x, int m)
+        {
+            return (x % m + m) % m;
         }
     }
 }
