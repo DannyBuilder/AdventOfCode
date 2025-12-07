@@ -40,5 +40,36 @@ public class Day3
         }
         return result;
     }
-    
+
+    public long Part2()
+    {
+        long total = 0;
+        const int targetLength = 12;
+
+        foreach (var line in _allLines)
+        {
+            var dropsAllowed = line.Length - targetLength;
+            var stack = new List<char>();
+
+            foreach (var digit in line)
+            {
+                while (stack.Count > 0 && 
+                       digit > stack[^1] && 
+                       dropsAllowed > 0)
+                {
+                    stack.RemoveAt(stack.Count - 1);
+                    dropsAllowed--;
+                }
+                    
+                stack.Add(digit);
+            }
+            
+            var resultString = new string(stack.Take(targetLength).ToArray());
+                
+            total += long.Parse(resultString);
+        }
+
+        return total;
+    }
 }
+    
