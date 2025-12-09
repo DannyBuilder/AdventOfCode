@@ -71,4 +71,39 @@ public class Day4
         }
         return neighborCount < 4;
     }
+
+    public int Part2()
+    {
+        var totalRemoved = 0;
+        bool anyRemoved;
+
+        do 
+        {
+            anyRemoved = false;
+            var toRemove = new List<(int r, int c)>();
+
+            for (var i = 0; i < _dp.GetLength(0); i++)
+            {
+                for (var j = 0; j < _dp.GetLength(1); j++)
+                {
+                    if (_dp[i, j] == 1 && Check(i, j))
+                    {
+                        toRemove.Add((i, j));
+                    }
+                }
+            }
+            if (toRemove.Count > 0)
+            {
+                totalRemoved += toRemove.Count;
+                anyRemoved = true;
+                foreach (var (r, c) in toRemove)
+                {
+                    _dp[r, c] = 0;
+                }
+            }
+
+        } while (anyRemoved);
+
+        return totalRemoved;
+    }
 }

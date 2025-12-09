@@ -21,6 +21,7 @@ namespace AdventOfCode
             */
             var day4 = new Day4();
             Console.WriteLine("Day 4 - Part 4: " + day4.Part1());
+            Console.WriteLine("Day 4 - Part 4: " + day4.Part2());
         }
     }
 }
