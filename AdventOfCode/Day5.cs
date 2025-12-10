@@ -45,5 +45,28 @@ public class Day5
          */
     }
 
+    public long Part2()
+    {
+        long answer = 0;
+        var currentStart = ranges[0].Start;
+        var currentEnd = ranges[0].End;
+        for (var i = 1; i < ranges.Count; i++)
+        {
+            var nextRange = ranges[i];
+            if (nextRange.Start <= currentEnd + 1) 
+            {
+                currentEnd = Math.Max(currentEnd, nextRange.End);
+            }
+            else
+            {
+                answer += (currentEnd - currentStart + 1);
+                currentStart = nextRange.Start;
+                currentEnd = nextRange.End;
+            }
+        }
+        answer += (currentEnd - currentStart + 1);
+        return answer;
+    }
+
 
 }
