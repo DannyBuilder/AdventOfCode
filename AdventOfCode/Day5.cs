@@ -2,8 +2,8 @@ namespace AdventOfCode;
 
 public class Day5
 {
-    private readonly List<long> input = [];
-    private readonly List<(long Start, long End)> ranges = [];
+    private readonly List<long> _input = [];
+    private readonly List<(long Start, long End)> _ranges = [];
     
     public Day5()
     {
@@ -13,22 +13,22 @@ public class Day5
             var parts = line.Split('-');
             var start = long.Parse(parts[0]);
             var end = long.Parse(parts[1]);
-            ranges.Add((start, end));
+            _ranges.Add((start, end));
         }
         string? line1;
         while (!string.IsNullOrEmpty(line1 = Console.ReadLine()))
         {
-            input.Add(long.Parse(line1));
+            _input.Add(long.Parse(line1));
         }
-        ranges.Sort((a, b) => a.Start.CompareTo(b.Start));
+        _ranges.Sort((a, b) => a.Start.CompareTo(b.Start));
     }
 
     public int Part1()
     {
         var answer = 0;
-        foreach (var i in input)
+        foreach (var i in _input)
         {
-            foreach (var j in ranges)
+            foreach (var j in _ranges)
             {
                 if (j.Start > i)
                     break;
@@ -48,11 +48,11 @@ public class Day5
     public long Part2()
     {
         long answer = 0;
-        var currentStart = ranges[0].Start;
-        var currentEnd = ranges[0].End;
-        for (var i = 1; i < ranges.Count; i++)
+        var currentStart = _ranges[0].Start;
+        var currentEnd = _ranges[0].End;
+        for (var i = 1; i < _ranges.Count; i++)
         {
-            var nextRange = ranges[i];
+            var nextRange = _ranges[i];
             if (nextRange.Start <= currentEnd + 1) 
             {
                 currentEnd = Math.Max(currentEnd, nextRange.End);

@@ -21,11 +21,13 @@ namespace AdventOfCode
             var day4 = new Day4();
             Console.WriteLine("Day 4 - Part 1: " + day4.Part1());
             Console.WriteLine("Day 4 - Part 2: " + day4.Part2());
-            */
             var day5 = new Day5();
             Console.WriteLine("Day 5 - Part 1: " + day5.Part1());
             Console.WriteLine("Day 5 - Part 2: " + day5.Part2());
-            
+            */
+            var day6 = new Day6();
+            Console.WriteLine("Day 6 - Part 1: " + day6.Part1());
+
         }
     }
 }
