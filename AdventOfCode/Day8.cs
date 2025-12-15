@@ -94,4 +94,68 @@ public class Day8
             }
         }
     }
+
+    public long Part2()
+    {
+        var edges = new List<(long DistSq, int IdA, int IdB)>();
+        for (var i = 0; i < _points.Count; i++)
+        {
+            for (var j = i + 1; j < _points.Count; j++)
+            {
+                edges.Add((Distance(_points[i], _points[j]), i, j));
+            }
+        }
+
+        edges.Sort((a, b) => a.DistSq.CompareTo(b.DistSq));
+
+
+        var parent = Enumerable.Range(0, _points.Count).ToArray();
+        var size = Enumerable.Repeat(1, _points.Count).ToArray();
+        
+        var distinctCircuits = _points.Count;
+
+
+        foreach (var edge in edges.Where(edge => Union(edge.IdA, edge.IdB)))
+        {
+            distinctCircuits--;
+
+
+            if (distinctCircuits != 1) continue;
+            var p1 = _points[edge.IdA];
+            var p2 = _points[edge.IdB];
+
+            var result = (long)p1.X * p2.X;
+            return result;
+        }
+
+        return 0;
+
+        bool Union(int i, int j)
+        {
+            var rootA = Find(i);
+            var rootB = Find(j);
+
+            if (rootA == rootB) return false;
+            if (size[rootA] < size[rootB])
+            {
+                parent[rootA] = rootB;
+                size[rootB] += size[rootA];
+            }
+            else
+            {
+                parent[rootB] = rootA;
+                size[rootA] += size[rootB];
+            }
+
+            return true;
+
+        }
+
+        int Find(int i)
+        {
+            if (parent[i] != i)
+                parent[i] = Find(parent[i]);
+            return parent[i];
+        }
+    }
 }

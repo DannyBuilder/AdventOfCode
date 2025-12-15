@@ -33,6 +33,7 @@ namespace AdventOfCode
             */
             var day8 = new Day8();
             Console.WriteLine("Day 8 - Part 1: " + day8.Part1());
+            Console.WriteLine("Day 8 - Part 2: " + day8.Part2());
 
         }
     }
