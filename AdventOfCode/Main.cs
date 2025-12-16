@@ -30,10 +30,12 @@ namespace AdventOfCode
             var day7 = new Day7();
             Console.WriteLine("Day 7 - Part 1: " + day7.Part1());
             Console.WriteLine("Day 7 - Part 2: " + day7.Part2());
-            */
             var day8 = new Day8();
             Console.WriteLine("Day 8 - Part 1: " + day8.Part1());
             Console.WriteLine("Day 8 - Part 2: " + day8.Part2());
+            */
+            var day9 = new Day9();
+            Console.WriteLine("Day 9 - Part 1: " + day9.Part1());
 
         }
     }
