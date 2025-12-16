@@ -36,6 +36,7 @@ namespace AdventOfCode
             */
             var day9 = new Day9();
             Console.WriteLine("Day 9 - Part 1: " + day9.Part1());
+            Console.WriteLine("Day 9 - Part 2: " + day9.Part2());
 
         }
     }
