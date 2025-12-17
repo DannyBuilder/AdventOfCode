@@ -33,10 +33,12 @@ namespace AdventOfCode
             var day8 = new Day8();
             Console.WriteLine("Day 8 - Part 1: " + day8.Part1());
             Console.WriteLine("Day 8 - Part 2: " + day8.Part2());
-            */
             var day9 = new Day9();
             Console.WriteLine("Day 9 - Part 1: " + day9.Part1());
             Console.WriteLine("Day 9 - Part 2: " + day9.Part2());
+            */
+            var day10 = new Day10();
+            Console.WriteLine("Day 10 - Part 1: " + day10.Part1());
 
         }
     }
