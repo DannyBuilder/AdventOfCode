@@ -41,6 +41,7 @@ namespace AdventOfCode
             */
             var day11 = new Day11();
             Console.WriteLine("Day 11 - Part 1: " + day11.Part1("you"));
+            Console.WriteLine("Day 11 - Part 2: " + day11.Part2("svr", false, false));
 
         }
     }

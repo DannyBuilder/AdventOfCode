@@ -35,4 +35,31 @@ public class Day11
         _memo[current] = pathCount;
         return pathCount;
     }
+
+    public long Part2(string current, bool visitedDac, bool visitedFft)
+    {
+        switch (current)
+        {
+            case "dac":
+                visitedDac = true;
+                break;
+            case "fft":
+                visitedFft = true;
+                break;
+            case "out" when visitedDac && visitedFft:
+                return 1;
+            case "out":
+                return 0;
+        }
+
+        var stateKey = $"{current}|{visitedDac}|{visitedFft}";
+        if (_memo.TryGetValue(stateKey, out var value)) return value;
+
+        if (!_graph.TryGetValue(current, out var value1)) return 0;
+
+        var total = value1.Sum(neighbor => Part2(neighbor, visitedDac, visitedFft));
+
+        _memo[stateKey] = total;
+        return total;
+    }
 }
