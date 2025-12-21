@@ -49,8 +49,7 @@ public partial class Day10
             {
                 matrix[r, cols] = pattern[r] == '#' ? 1 : 0;
             }
-
-            // Gaussian Elimination (GF2)
+            
             var pivotRow = 0;
             var pivotCols = new List<int>();
 
@@ -128,6 +127,81 @@ public partial class Day10
             return minWeight;
         }
 
-    [GeneratedRegex(@"\[([.#]+)\]")]
-    private static partial Regex MyRegex();
+        [GeneratedRegex(@"\[([.#]+)\]")]
+        private static partial Regex MyRegex();
+    
+    public long Part2()
+    {
+        return _inputLines.Sum(SolveMachine);
+    }
+
+        private long SolveMachine(string line)
+        {
+            var buttonMatches = MyRegex1().Matches(line);
+            var buttons = buttonMatches.Cast<Match>()
+                .Select(m => m.Groups[1].Value.Split(',').Select(int.Parse).ToList())
+                .ToList();
+
+            var joltageMatch = Regex.Match(line, @"\{([\d,]+)\}");
+            var targetJoltages = joltageMatch.Groups[1].Value.Split(',').Select(int.Parse).ToList();
+
+            var numCounters = targetJoltages.Count;
+            
+            var parityDict = new Dictionary<string, List<int[]>>();
+            var valueDict = new Dictionary<int[], List<int>>();
+
+            var numButtons = buttons.Count;
+            var totalCombos = 1 << numButtons; // 2^numButtons
+
+            for (var i = 0; i < totalCombos; i++)
+            {
+                var combo = new int[numButtons];
+                var joltageIncreases = Enumerable.Repeat(0, numCounters).ToList();
+
+                for (var b = 0; b < numButtons; b++)
+                {
+                    if (((i >> b) & 1) != 1) continue;
+                    combo[b] = 1;
+                    foreach (var counterIdx in buttons[b].Where(counterIdx => counterIdx < numCounters))
+                    {
+                        joltageIncreases[counterIdx]++;
+                    }
+                }
+
+                var parityKey = string.Join(",", joltageIncreases.Select(x => x % 2));
+                if (!parityDict.ContainsKey(parityKey)) parityDict[parityKey] = new List<int[]>();
+                
+                parityDict[parityKey].Add(combo);
+                valueDict[combo] = joltageIncreases;
+            }
+            
+            var memo = new Dictionary<string, long>();
+            return MinPresses(targetJoltages, parityDict, valueDict, memo);
+        }
+
+        private long MinPresses(List<int> currentJoltages, 
+                               Dictionary<string, List<int[]>> parityDict, 
+                               Dictionary<int[], List<int>> valueDict,
+                               Dictionary<string, long> memo)
+        {
+            if (currentJoltages.All(x => x == 0)) return 0;
+            if (currentJoltages.Any(x => x < 0)) return int.MaxValue;
+
+            var memoKey = string.Join(",", currentJoltages);
+            if (memo.TryGetValue(memoKey, out var presses)) return presses;
+
+            long minResult = int.MaxValue;
+            var currentParity = string.Join(",", currentJoltages.Select(x => x % 2));
+
+            if (parityDict.TryGetValue(currentParity, out var validCombos))
+            {
+                minResult = (from combo in validCombos let joltageIncreases = valueDict[combo] let nextJoltages = currentJoltages.Select((t, i) => (t - joltageIncreases[i]) / 2).ToList() let pressesInThisStep = combo.Sum() select pressesInThisStep + 2 * MinPresses(nextJoltages, parityDict, valueDict, memo)).Prepend(minResult).Min();
+            }
+
+            memo[memoKey] = minResult;
+            return minResult;
+        }
+
+    [GeneratedRegex(@"\(([\d,]+)\)")]
+    private static partial Regex MyRegex1();
 }
